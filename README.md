@@ -37,7 +37,7 @@ CLIENT:
 ```JSON
 STAFF:
     "email":"zoya@gmail.com",
-    "password":"zoyaa123"
+    "password":"Zoyaa123"
 ```
 ```JSON
 ADMIN:

@@ -12,6 +12,8 @@ pyjwt = "*"
 python-dotenv = "*"
 marshmallow = "*"
 injector = "*"
+flask-cors = "*"
+bleach = "*"
 
 [dev-packages]
 

@@ -12,3 +12,4 @@ class UserDomain:
     about_me: str
     role: UserRole
 
+    
