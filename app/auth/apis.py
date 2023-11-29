@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from datetime import datetime, timedelta
 from marshmallow import Schema, fields, ValidationError, validate
+from app.common.utils import sanitize_input
 from core.auth.services import AuthService
 from core.user.constants import UserRole
 from app.di import injector
@@ -15,11 +16,12 @@ class UserRegistrationSchema(Schema):
     name = fields.String(required=True)
     city = fields.String(required=True)
     about_me = fields.String(required=True)
-    role = fields.Enum(UserRole, required=True)
+    role = fields.Enum(UserRole, missing=UserRole.CLIENT)
 
 @auth_blueprint.route('/registration', methods=['POST'])
+@sanitize_input
 def register_user():
-    data = request.get_json()
+    data = request.sanitized_data
     schema = UserRegistrationSchema()
 
     try:
@@ -44,8 +46,9 @@ class UserLoginSchema(Schema):
     password = fields.String(required=True, validate=validate.Length(min=8))
 
 @auth_blueprint.route('/login', methods=['POST'])
+@sanitize_input
 def login_user():
-    data = request.get_json()
+    data = request.sanitized_data
     schema = UserLoginSchema()
 
     try:

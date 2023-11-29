@@ -49,7 +49,7 @@ def get_user_specific(user_id):
 
     if not user:
         return {"error_message": "User not Found"}, 404
-
+    
     return {
         "user_id": user.id,
         "name": user.name,
