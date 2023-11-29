@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from core.task.constants import TaskPriority, TaskPurpose
+from core.task.constants import TaskPriority, TaskPurpose, TaskStatus
 
 @dataclass
 class TaskDomain:
     id: int
     user_id: int
     title: str
-    purpose: TaskPurpose
     description: str
-    due_date: datetime
+    purpose: TaskPurpose
     priority: TaskPriority
-    is_deleted: bool
+    status: TaskStatus
+    due_date: datetime
