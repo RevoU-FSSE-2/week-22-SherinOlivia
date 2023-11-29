@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from datetime import datetime, timedelta
 from marshmallow import Schema, fields, ValidationError, validate
+from app.auth.utils import decode_jwt
 from app.common.utils import sanitize_input
 from core.auth.services import AuthService
 from core.user.constants import UserRole
@@ -65,3 +66,12 @@ def login_user():
         return {"error_message": "Invalid Username/Password"}, 401
 
     return result
+
+@auth_blueprint.route('/logout', methods=['POST'])
+def logout():
+    token = request.headers.get('Authorization')
+    token_payload = decode_jwt(token)
+    
+    if not token_payload:
+        return {"error_message": "Invalid Token"}, 401
+    return {"message": "Logout successful. See you next time!"}, 200
