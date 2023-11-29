@@ -14,6 +14,7 @@ marshmallow = "*"
 injector = "*"
 flask-cors = "*"
 bleach = "*"
+sqlalchemy-easy-softdelete = "*"
 
 [dev-packages]
 
