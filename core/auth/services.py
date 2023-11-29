@@ -62,6 +62,7 @@ class AuthService():
         token = jwt.encode(token_payload, secret_key, algorithm='HS256')
 
         return {
+            "success": True,
             "message": f"Welcome {valid_user.name}!",
             'id': valid_user.id,
             'username': valid_user.username,
