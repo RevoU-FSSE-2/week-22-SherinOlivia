@@ -15,6 +15,7 @@ injector = "*"
 flask-cors = "*"
 bleach = "*"
 sqlalchemy-easy-softdelete = "*"
+flask-talisman = "*"
 
 [dev-packages]
 
