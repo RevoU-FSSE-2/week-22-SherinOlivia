@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from app.common.utils import sanitize_input, sanitize_url_params
 from core.task.constants import TaskPurpose, TaskPriority, TaskStatus
 from core.task.services import TaskService
 from core.user.services import UserService
@@ -23,6 +24,7 @@ class CreateTaskSchema(Schema):
     status = fields.Enum(TaskStatus, missing=TaskStatus.ONGOING)
 
 @task_blueprint.route('/create', methods=['POST'])
+@sanitize_input
 def create_task():
     token = request.headers.get('Authorization')
     token_payload = decode_jwt(token)
@@ -37,7 +39,7 @@ def create_task():
     if not user:
         return {"error_message": "User not Found"}, 404
 
-    data = request.get_json()
+    data = request.sanitized_data
     schema = CreateTaskSchema()
 
     try:
@@ -116,6 +118,37 @@ def get_task_list():
         "tasks": list_of_task
     }, 200
 
+@task_blueprint.route('/<int:task_id>', methods=['GET'])
+@sanitize_url_params
+def get_one_task(task_id):
+    token = request.headers.get('Authorization')
+    token_payload = decode_jwt(token)
+    
+    if not token_payload:
+        return {"error_message": "Invalid Token"}, 401
+
+    user_id = token_payload['user_id']
+
+    user = user_service.get_by_id(user_id)
+    
+    if not user:
+        return {"error_message": "User not Found"}, 404
+    
+    sanitized_task_id = request.sanitized_task_id
+    task = task_service.get_by_id(sanitized_task_id)
+
+    return {
+        "message": "Task Successfully fetched",
+        "id": task.id,
+        "name": user.name,
+        "title": task.title,
+        "description": task.description,
+        "purpose": task.purpose.value,
+        "priority": task.priority.value,
+        "due_date": task.due_date
+    }, 200
+
+
 class EditTaskSchema(Schema):
     title = fields.String(required=True)
     description = fields.String(required=True)
@@ -124,6 +157,8 @@ class EditTaskSchema(Schema):
     due_date = fields.DateTime(format=DUE_DATE_FORMAT, required=True)
 
 @task_blueprint.route('/edit/<int:task_id>', methods=['PUT'])
+@sanitize_input
+@sanitize_url_params
 def edit_task(task_id):
     token = request.headers.get('Authorization')
     token_payload = decode_jwt(token)
@@ -138,7 +173,7 @@ def edit_task(task_id):
     if not user:
         return {"error_message": "User not Found"}, 404
 
-    data = request.get_json()
+    data = request.sanitized_data
     schema = EditTaskSchema()
 
     try:
@@ -146,7 +181,8 @@ def edit_task(task_id):
     except ValidationError as err:
         return {"error message": err.messages}, 400
     
-    task = task_service.get_by_id(task_id)
+    sanitized_task_id = request.sanitized_task_id
+    task = task_service.get_by_id(sanitized_task_id)
 
     if not task:
         return {"error_message": "Task not Found."}, 404
@@ -173,6 +209,8 @@ class UpdateTaskStatusSchema(Schema):
     status = fields.Enum(TaskStatus, required=True)
 
 @task_blueprint.route('/update/<int:task_id>', methods=['PATCH'])
+@sanitize_input
+@sanitize_url_params
 def update_task_status(task_id):
     token = request.headers.get('Authorization')
     token_payload = decode_jwt(token)
@@ -183,14 +221,15 @@ def update_task_status(task_id):
     user_id = token_payload['user_id']
     user = user_service.get_by_id(user_id)
 
-    data = request.get_json()
+    data = request.sanitized_data
     schema = UpdateTaskStatusSchema()
     try:
         data = schema.load(data)
     except ValidationError as err:
         return {"error message": err.messages}, 400
     
-    task = task_service.get_by_id(task_id)
+    sanitized_task_id = request.sanitized_task_id
+    task = task_service.get_by_id(sanitized_task_id)
     staff_or_admin = token_payload['role'] == 'STAFF' or token_payload['role'] == 'ADMIN'
 
     if staff_or_admin:
@@ -212,6 +251,7 @@ def update_task_status(task_id):
     }, 200
 
 @task_blueprint.route('/delete/<int:task_id>', methods=['DELETE'])
+@sanitize_url_params
 def delete_task(task_id):
     token = request.headers.get('Authorization')
     token_payload = decode_jwt(token)
@@ -232,7 +272,8 @@ def delete_task(task_id):
     if not user:
         return {"error_message": "User not Found"}, 404
 
-    task = task_service.get_by_id(task_id)
+    sanitized_task_id = request.sanitized_task_id
+    task = task_service.get_by_id(sanitized_task_id)
 
     if task.user_id != user.id:
         return {"error message": f"Task doesn't belong to {user.name}"}, 400
