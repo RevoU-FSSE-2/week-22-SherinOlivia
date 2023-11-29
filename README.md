@@ -31,17 +31,17 @@ The capabilities of the project are:
 ## Sample Accounts
 ```JSON
 CLIENT:
-    "email": "dreya@gmail.com",
+    "username": "dreya",
     "password":"dreya123"
 ```
 ```JSON
 STAFF:
-    "email":"zoya@gmail.com",
+    "username":"zoyaaa",
     "password":"Zoyaa123"
 ```
 ```JSON
 ADMIN:
-    "email":"Chief@minos.com",
+    "username":"FChief",
     "password":"Chief123"
 ```
 <br>
