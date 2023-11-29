@@ -9,3 +9,8 @@ class TaskPurpose(Enum):
     WORK = "WORK"
     STUDY = "STUDY"
     GENERAL = "GENERAL"
+    PERSONAL = "PERSONAL"
+
+class TaskStatus(Enum):
+    ONGOING = "ONGOING"
+    COMPLETED = "COMPLETED"
