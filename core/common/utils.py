@@ -1,6 +1,8 @@
+from sqlalchemy_easy_softdelete.mixin import generate_soft_delete_mixin_class
+from sqlalchemy_easy_softdelete.hook import IgnoredTable
+from datetime import datetime
 from typing import Type, TypeVar, List
 import dataclasses
-
 class ObjectMapperUtil:
     T = TypeVar("T")
 
@@ -26,3 +28,9 @@ class ObjectMapperUtil:
             ObjectMapperUtil.map(source_model_object, destination_domain_class)
             for source_model_object in source_model_objects
         ]
+    
+# Soft Delete:
+class SoftDeleteMixin(generate_soft_delete_mixin_class(
+    ignored_tables=[IgnoredTable(table_schema="public", name="user"),]
+)):
+    deleted_at: datetime
