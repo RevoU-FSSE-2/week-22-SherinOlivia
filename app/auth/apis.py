@@ -74,4 +74,6 @@ def logout():
     
     if not token_payload:
         return {"error_message": "Invalid Token"}, 401
-    return {"message": "Logout successful. See you next time!"}, 200
+    return {
+        "success": True,
+        "message": "Logout successful. See you next time!"}, 200
