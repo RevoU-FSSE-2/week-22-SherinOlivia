@@ -16,6 +16,8 @@ flask-cors = "*"
 bleach = "*"
 sqlalchemy-easy-softdelete = "*"
 flask-talisman = "*"
+flask-restful = "*"
+flask-swagger-ui = "*"
 
 [dev-packages]
 
