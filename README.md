@@ -1,17 +1,23 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/DGzh2WKs)
-# Project Milestone 4 Overview
-For this week's assignment, we are tasked to convert our to-do-list app backend (from Project Milestone 3) to Flask
+# Project Milestone 5 Overview
+For this week's assignment, we are tasked to convert our to-do-list app backend (from Project Milestone 3) to Flask and adjust the React frontend for compatibility.
 
 The capabilities of the project are:
 1. CRUD Implementation 
 - Register
 - Login
 - User's Profile
+- Create new Task
+- Edit Task
+- Update Task Status
+- Delete task
 2. Database 
 - PostgreSQL (through Supabase)
 3. Authentication and Authorization
 - Authentication: JWT (& Bcrypt)
 - Authorization: Role-Based Access Control (RBAC)
+4. Documentation
+- Swagger
 
 ## Tools used
 - Flask
@@ -20,6 +26,7 @@ The capabilities of the project are:
 - JWT
 - Marshmallow
 - Injector
+- flask-swagger-ui
 
 ## API Endpoints
 
