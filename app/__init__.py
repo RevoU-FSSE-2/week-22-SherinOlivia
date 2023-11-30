@@ -1,4 +1,5 @@
 import os, logging
+import secrets
 from flask import Flask
 from app.user.apis import user_blueprint
 from app.auth.apis import auth_blueprint
@@ -7,27 +8,58 @@ from infrastructure.db import db, db_init
 from flask_cors import CORS
 from flask_talisman import Talisman
 from dotenv import load_dotenv
+from flask_restful import Resource, Api
+from flask_swagger_ui import get_swaggerui_blueprint
 
 load_dotenv()
 
 app = Flask(__name__)
+api = Api(app)
 
-CORS(app, origins=["http://localhost:3000", "http://localhost:5173"])
+# Security
+class HelloWorld(Resource):
+    def get(self):
+        nonce = secrets.token_hex(16)
+        csp = {
+            "default-src": "'self'",
+            "style-src": ["'self'", f"'nonce-{nonce}'", "https://cdn.jsdelivr.net"],
+            "script-src": ["'self'", f"'nonce-{nonce}'", "https://cdn.jsdelivr.net"],
+        }
+
+        Talisman(
+            app,
+            content_security_policy=csp,
+            force_https=False,
+            strict_transport_security=False,
+            content_security_policy_nonce_in=["script-src"],
+        )
+
+        return {'hello': 'world'}
+
+api.add_resource(HelloWorld, '/')
+
+# Swagger UI Blueprint
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Sample API"
+    }
+)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+# CORS
+CORS(app, origins=["http://localhost:3000", "http://localhost:5173", "https://week22-44a31.web.app"])
 logging.getLogger('flask_cors').level = logging.DEBUG
 
-Talisman(
-    app,
-    content_security_policy={"default-src": "self"},
-    force_https=False,
-    strict_transport_security=False,
-    content_security_policy_nonce_in=["script-src"],
-)
-
-
+# Database
 database_url = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 db.init_app(app)
 
+# Blueprints
 app.register_blueprint(user_blueprint, url_prefix="/user")
 app.register_blueprint(auth_blueprint, url_prefix="/auth")
 app.register_blueprint(task_blueprint, url_prefix="/task")
@@ -36,5 +68,5 @@ app.register_blueprint(task_blueprint, url_prefix="/task")
 def hello_world():
     return {"message": "Hi! Welcome to Sherin Olivia's Project Milestone 4..!"}, 200
 
-# with app.app_context():
-#     db_init()
+if __name__ == '__main__':
+    app.run(debug=True)
