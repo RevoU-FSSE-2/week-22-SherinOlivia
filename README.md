@@ -28,12 +28,20 @@ The capabilities of the project are:
 - Injector
 - flask-swagger-ui
 
+## Front End Deployed Link & Repo
+<p align="center">
+<a href="https://github.com/SherinOlivia/to-do-list-app">FE Repository</a>
+</p> 
+<p align="center">
+<a href="https://week22-44a31.web.app">week22-44a31.web.app</a>
+</p> 
+
 ## API Endpoints
 
 <p align="center">
-<a href="x">x</a> || 
-<a href="x">x</a>
+<a href="https://sherinolivia-ttfsxqentq-uc.a.run.app">sherinolivia-ttfsxqentq-uc.a.run.app</a> || <a href="http://127.0.0.1:5000/swagger/">127.0.0.1:5000/swagger</a>
 </p> 
+
 
 ## Sample Accounts
 ```JSON
@@ -52,6 +60,88 @@ ADMIN:
     "password":"Chief123"
 ```
 <br>
+
+## Request Required Data:
+**AUTH:**
+```JSON
+Register (ENUM: CLIENT/STAFF/ADMIN, if not provided -> default = CLIENT):
+{
+    "username":"yourUsername",
+    "email": "your@email.com",
+    "password":"yourP4ssw0rd",
+    "name":"your name",
+    "city":"your city",
+    "about_me":"short self-description"
+}
+```
+```JSON
+Login:
+{
+    "username":"yourUsername",
+    "password":"yourP4ssw0rd"
+}
+```
+<br>
+
+**TASKS:**
+```JSON
+Create New Task:
+{
+    "title": "Task Title",
+    "description": "Task Description",
+    "purpose": "WORK/STUDY/GENERAL/PERSONAL (ENUM)",
+    "priority": "LOW/MEDIUM/HIGH (ENUM)",
+    "due_date": "yyyy-mm-dd HH",
+}
+```
+```JSON
+Edit Task:
+{
+    "title": "New? Task Title",
+    "description": "New? Task Description",
+    "purpose": "Task Purpose (work/personal/finance/misc)",
+    "due_date": "yyyy-mm-dd hh:mm:ss format (i.e: 2023-11-21 12:30:00)"
+}
+```
+```JSON
+Update Task Status:
+{
+    "status": "ONGOING/COMPLETED (ENUM)"
+}
+```
+<br>
+
+## API Endpoints
+
+<p align="center">
+<a href="https://sherinolivia-ttfsxqentq-uc.a.run.app">sherinolivia-ttfsxqentq-uc.a.run.app</a>
+</p> 
+
+**AUTH & USERS**
+<div align="center">
+
+| Name  | HTTP Method | Endpoint | Authentication | Authorization |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+| **Homepage** | `GET` |[/](https://sherinolivia-ttfsxqentq-uc.a.run.app/) | ❌ | ❌ |
+| **Register User** | `POST` | [/auth/registration](https://sherinolivia-ttfsxqentq-uc.a.run.app/auth/registration) | ❌ | ❌ |
+| **Login User** | `POST` | [/auth/login](https://sherinolivia-ttfsxqentq-uc.a.run.app/auth/login) | ❌ | ❌ |
+| **Logout User** | `POST` | [/auth/logout](https://sherinolivia-ttfsxqentq-uc.a.run.app/auth/logout) | ✔ | ❌ |
+| **User Profile (each user sees their own)** | `GET` | [/users/profile](https://sherinolivia-ttfsxqentq-uc.a.run.app/user/profile) | ✔ | **CLIENT**, **STAFF**, **ADMIN** |
+</div>
+
+**TASKS**
+<div align="center">
+
+| Name  | HTTP Method | Endpoint | Authentication | Authorization |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+| **Homepage** | `GET` |[/](https://sherinolivia-ttfsxqentq-uc.a.run.app/) | ❌ | ❌ |
+| **Create New Taks** | `POST` | [/task/create](https://sherinolivia-ttfsxqentq-uc.a.run.app/task/create) | ✔ | **CLIENT**, **STAFF**, **ADMIN** |
+| **List All Tasks ('CLIENT' can only see their own)** | `GET` | [/task/list](https://sherinolivia-ttfsxqentq-uc.a.run.app/task/list) | ✔ | **CLIENT**, **STAFF**, **ADMIN** |
+| **Edit Task** | `PUT` | [/task/edit/{taskId}](https://sherinolivia-ttfsxqentq-uc.a.run.app/task/edit/2) | ✔ | **CLIENT**, **STAFF**, **ADMIN** |
+| **Update Task Status** | `PATCH` | [/task/update/{taskId}](https://sherinolivia-ttfsxqentq-uc.a.run.app/task/update/2) | ✔ | **CLIENT**, **STAFF**, **ADMIN** |
+| **Delete Task (Soft Delete)** | `DELETE` | [/task/delete/{taskId}](https://sherinolivia-ttfsxqentq-uc.a.run.app/task/delete/1) | ✔ | **CLIENT**, **STAFF**, **ADMIN** |
+
+</div>
 
 ### Contact Me:
 
